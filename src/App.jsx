@@ -631,7 +631,23 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
                 </div>
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   <div className="flex items-center gap-1 text-slate-500">
-                    <span className="text-[11px] font-semibold" dir="ltr">{appt.timeStr}</span>
+                    {(() => {
+                      const parts = String(appt.timeStr || '').trim().split(/\s+/);
+
+                      const time = parts.find((part) => part.includes(':')) || '';
+                      const day = parts.find((part) => /^\d{1,2}$/.test(part)) || '';
+                      const month = parts.find((part) => !part.includes(':') && !/^\d{1,2}$/.test(part)) || '';
+
+                      return (
+                        <span
+                          dir="rtl"
+                          className="text-[11px] font-semibold whitespace-nowrap"
+                          style={{ unicodeBidi: 'isolate' }}
+                        >
+                          {`${time} ${month} ${day}`}
+                        </span>
+                      );
+                    })()}
                     <Clock size={14} className="text-slate-400" />
                   </div>
                   <button 
@@ -1719,6 +1735,26 @@ function getRealCalendarData(monthOffset = 0) {
   };
 }
 
+function AppointmentDateTimeLabel({ value }) {
+  const parts = String(value || '').trim().split(/\s+/);
+
+  const time = parts.find(part => part.includes(':')) || '';
+  const day = parts.find(part => /^\d{1,2}$/.test(part)) || '';
+  const month = parts.find(part => !part.includes(':') && !/^\d{1,2}$/.test(part)) || '';
+
+  return (
+    <span
+      dir="ltr"
+      className="text-[11px] font-semibold inline-grid grid-flow-col auto-cols-max items-center gap-1 whitespace-nowrap"
+      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+    >
+      <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{day}</span>
+      <span dir="rtl" style={{ unicodeBidi: 'isolate' }}>{month}</span>
+      <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{time}</span>
+    </span>
+  );
+}
+
 function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPreselectedProvider, searchQuery, appointmentsList, setAppointmentsList }) {
   const providers = [
     { id: 'sw', name: 'תיאום טיפול - מרפאת רמת חן (מיכל)' },
@@ -1959,24 +1995,9 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                 </div>
                 
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
-                  <div className="flex items-center gap-1 text-slate-500">
-                    {(() => {
-                      const parts = appt.timeStr.trim().split(/\s+/);
-
-                      const time = parts.find(part => part.includes(':'));
-                      const day = parts.find(part => /^\d{1,2}$/.test(part));
-                      const month = parts.find(part => !part.includes(':') && !/^\d{1,2}$/.test(part));
-
-                      return (
-                        <span className="text-[11px] font-semibold inline-flex items-center gap-1 whitespace-nowrap" dir="ltr">
-                          <span dir="ltr">{day}</span>
-                          <span dir="rtl">{month}</span>
-                          <span dir="ltr">{time}</span>
-                        </span>
-                      );
-                    })()}
-
-                    <Clock size={14} className="text-slate-400" />
+                  <div className="flex items-center gap-1 text-slate-500" dir="ltr">
+                    <Clock size={14} className="text-slate-400 shrink-0" />
+                    <AppointmentDateTimeLabel value={appt.timeStr} />
                   </div>
                   <button 
                     onClick={() => setCancelModal({ isOpen: true, apptId: appt.id })}
