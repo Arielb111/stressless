@@ -786,8 +786,7 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
                       </li>
                     ))}
                   </ul>
-                </div>,
-                document.body
+                </div>
               )}
               
               {/* Section 2: Unused */}
@@ -847,7 +846,8 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
             </div>
             
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
