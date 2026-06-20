@@ -1661,7 +1661,7 @@ function ChatView({ searchQuery }) {
 // SCREEN 4: APPOINTMENT BOOKING (REDESIGNED)
 // ==========================================
 
-function getRealCalendarData(weekOffset = 0) {
+function getRealCalendarData(monthOffset = 0) {
   const monthNames = [
     'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
     'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
@@ -1670,14 +1670,14 @@ function getRealCalendarData(weekOffset = 0) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const currentDay = today.getDay(); // 0 ראשון, 1 שני ... 6 שבת
-  const daysUntilNextSunday = currentDay === 0 ? 7 : 7 - currentDay;
+  const displayMonthDate = new Date(
+    today.getFullYear(),
+    today.getMonth() + monthOffset,
+    1
+  );
 
-  const nextSunday = new Date(today);
-  nextSunday.setDate(today.getDate() + daysUntilNextSunday + weekOffset * 7);
-
-  const year = nextSunday.getFullYear();
-  const month = nextSunday.getMonth();
+  const year = displayMonthDate.getFullYear();
+  const month = displayMonthDate.getMonth();
 
   const firstDayOfMonth = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -1685,25 +1685,35 @@ function getRealCalendarData(weekOffset = 0) {
   const allowedDateIds = [];
   const labels = {};
 
-  for (let i = 0; i < 5; i++) {
-    const date = new Date(nextSunday);
-    date.setDate(nextSunday.getDate() + i);
+  const days = Array.from({ length: daysInMonth }, (_, i) => {
+    const day = i + 1;
+    const date = new Date(year, month, day);
+    date.setHours(0, 0, 0, 0);
 
-    const id = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const id = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-    allowedDateIds.push(id);
-    labels[id] = `${date.getDate()} ${monthNames[date.getMonth()]}`;
-  }
+    const dayOfWeek = date.getDay();
+    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // שישי ושבת
+    const isPast = date < today;
+
+    const isAllowed = !isPast && !isWeekend;
+
+    if (isAllowed) {
+      allowedDateIds.push(id);
+      labels[id] = `${day} ${monthNames[month]}`;
+    }
+
+    return {
+      day,
+      id,
+      isAllowed
+    };
+  });
 
   return {
     monthTitle: `${monthNames[month]} ${year}`,
     blanks: Array(firstDayOfMonth).fill(null),
-    days: Array.from({ length: daysInMonth }, (_, i) => {
-      const day = i + 1;
-      const id = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-      return { day, id };
-    }),
+    days,
     allowedDateIds,
     labels
   };
@@ -1754,10 +1764,10 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
   
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [calendarWeekOffset, setCalendarWeekOffset] = useState(0);
+  const [calendarMonthOffset, setCalendarMonthOffset] = useState(0);
 
   const weekDays = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
-  const calendarData = getRealCalendarData(calendarWeekOffset);
+  const calendarData = getRealCalendarData(calendarMonthOffset);
 
   const timeSlots = [
     '09:00', '10:30', '11:00', '13:00', '14:00', '15:30'
@@ -1804,15 +1814,15 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               <button
                 type="button"
                 onClick={() => {
-                  setCalendarWeekOffset(prev => Math.max(0, prev - 1));
+                  setCalendarMonthOffset(prev => Math.max(0, prev - 1));
                   setSelectedDate(null);
                   setSelectedTime(null);
                 }}
-                disabled={calendarWeekOffset === 0}
+                disabled={calendarMonthOffset === 0}
                 className={`w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors ${
-                  calendarWeekOffset === 0 ? 'opacity-40 cursor-not-allowed' : ''
+                  calendarMonthOffset === 0 ? 'opacity-40 cursor-not-allowed' : ''
                 }`}
-                title="שבוע קודם"
+                title="חודש קודם"
               >
                 <ChevronRight size={16} />
               </button>
@@ -1820,12 +1830,12 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               <button
                 type="button"
                 onClick={() => {
-                  setCalendarWeekOffset(prev => prev + 1);
+                  setCalendarMonthOffset(prev => prev + 1);
                   setSelectedDate(null);
                   setSelectedTime(null);
                 }}
                 className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors"
-                title="שבוע הבא"
+                title="חודש הבא"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -1844,7 +1854,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
             {/* UX FIX: Highlight active/selectable dates with a soft purple background, restrict weekends */}
             {calendarData.days.map(dateObj => {
               const isSelected = selectedDate === dateObj.id;
-              const isDisabled = !calendarData.allowedDateIds.includes(dateObj.id);
+              const isDisabled = !dateObj.isAllowed;
 
               return (
                 <div key={dateObj.id} className="flex justify-center items-center">
