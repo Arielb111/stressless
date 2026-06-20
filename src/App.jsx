@@ -466,7 +466,7 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
     { name: 'חברה ופנאי', icon: Users, provider: 'מועדון חברתי "יחדיו"', valid: 'בתוקף עד 31.12.2026', timeLeft: 'נותרה כחצי שנה', timeStatus: 'valid', providerId: 'social', status: 'active' },
     { name: 'תיאום טיפול', icon: Share2, provider: 'מרפאת רמת חן - מיכל ינאי', valid: 'ללא הגבלת זמן', timeLeft: 'קבוע', timeStatus: 'unlimited', providerId: 'sw', status: 'active' },
     { name: 'תעסוקה נתמכת', icon: Briefcase, provider: 'טרם נבחר ספק', valid: 'זכאות מאושרת', timeLeft: 'לא ממומש', timeStatus: 'unused', providerId: 'employment', status: 'unused' },
-    { name: 'רפואת שיניים', icon: SmilePlus, provider: '', valid: 'הוגשה בקשה לוועדה', timeLeft: 'ממתין', timeStatus: 'pending', providerId: 'dental', status: 'pending' },
+    { name: 'רפואת שיניים', icon: SmilePlus, provider: 'טרם נבחר ספק', valid: 'הוגשה בקשה לוועדה', timeLeft: 'ממתין', timeStatus: 'pending', providerId: 'dental', status: 'pending' },
   ];
 
   const activeServices = myAllServices.filter(s => s.status === 'active');
