@@ -1246,9 +1246,9 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
         </div>
       )}
 
-      {/* NEW FIX: Document Viewer Modal */}
-      {viewDoc && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+      {/* Document Viewer Modal */}
+      {viewDoc && createPortal(
+        <div className="fixed inset-0 z-[210] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-2xl h-[75vh] rounded-[32px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
             
             {/* Header */}
@@ -1287,7 +1287,8 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
             </div>
             
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>
