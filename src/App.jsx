@@ -2012,7 +2012,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                             unicodeBidi: 'isolate'
                           }}
                         >
-                          <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{day}</span>
+                          <span dir="rtl" style={{ unicodeBidi: 'isolate' }}>{day}</span>
                           <span dir="rtl" style={{ unicodeBidi: 'isolate' }}>{month}</span>
                           <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{time}</span>
                         </span>
