@@ -1960,9 +1960,20 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                 
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   <div className="flex items-center gap-1 text-slate-500">
-                    <span dir="ltr" className="text-[11px] font-semibold inline-block text-left whitespace-nowrap">
-                      {appt.timeStr}
-                    </span>
+                    {(() => {
+                      const [day, month, time] = appt.timeStr.split(' ');
+
+                      return (
+                        <span
+                          dir="ltr"
+                          className="text-[11px] font-semibold inline-flex flex-row items-center gap-1 whitespace-nowrap"
+                        >
+                          <span>{day}</span>
+                          <span dir="rtl">{month}</span>
+                          <span>{time}</span>
+                        </span>
+                      );
+                    })()}
                     <Clock size={14} className="text-slate-400" />
                   </div>
                   <button 
