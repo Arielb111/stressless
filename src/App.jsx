@@ -514,7 +514,21 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
           
           <div className="flex flex-col z-10 flex-1">
             <h3 className="font-semibold text-slate-800 text-lg leading-tight">תוכנית השיקום שלך</h3>
-            <p className="text-xs text-slate-500 mt-1 mb-3 leading-snug">אושרה ע״י ועדת סל שיקום מחוזית • בתוקף לעוד כחודש</p>
+            <div className="mt-2 mb-3 flex flex-col gap-2 text-xs text-slate-600 leading-snug">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                  <CheckCircle2 size={13} strokeWidth={2.5} />
+                </span>
+                <span>אושרה ועדת סל שיקום מחוזית</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-[#f4effd] text-[#7b29e8] flex items-center justify-center shrink-0">
+                  <CalendarDays size={13} strokeWidth={2.3} />
+                </span>
+                <span>נשאר חודש לסיום התוקף</span>
+              </div>
+            </div>
             
             <div className="flex flex-row gap-2 flex-wrap">
               <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md text-[11px] font-medium border border-emerald-100">
