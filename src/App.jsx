@@ -751,9 +751,11 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
 
       {/* Services Breakdown Modal */}
       {isServicesBreakdownOpen && createPortal(
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-          {/* UX FIX: Applied overflow-hidden to ensure corners remain perfectly rounded */}
-          <div className="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col overflow-hidden">
+        <div
+          dir="rtl"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col overflow-hidden text-right">
             
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-slate-800">פירוט תוכנית השיקום</h3>
@@ -1248,8 +1250,11 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
 
       {/* Document Viewer Modal */}
       {viewDoc && createPortal(
-        <div className="fixed inset-0 z-[210] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-2xl h-[75vh] rounded-[32px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+        <div
+          dir="rtl"
+          className="fixed inset-0 z-[210] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white w-full max-w-2xl h-[75vh] rounded-[32px] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 text-right">
             
             {/* Header */}
             <div className="flex justify-between items-center p-5 border-b border-slate-100 bg-white shrink-0">
