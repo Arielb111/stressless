@@ -1661,7 +1661,7 @@ function ChatView({ searchQuery }) {
 // SCREEN 4: APPOINTMENT BOOKING (REDESIGNED)
 // ==========================================
 
-function getRealCalendarData() {
+function getRealCalendarData(weekOffset = 0) {
   const monthNames = [
     'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
     'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
@@ -1674,7 +1674,7 @@ function getRealCalendarData() {
   const daysUntilNextSunday = currentDay === 0 ? 7 : 7 - currentDay;
 
   const nextSunday = new Date(today);
-  nextSunday.setDate(today.getDate() + daysUntilNextSunday);
+  nextSunday.setDate(today.getDate() + daysUntilNextSunday + weekOffset * 7);
 
   const year = nextSunday.getFullYear();
   const month = nextSunday.getMonth();
@@ -1754,9 +1754,10 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
   
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [calendarWeekOffset, setCalendarWeekOffset] = useState(0);
 
   const weekDays = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
-  const calendarData = getRealCalendarData();
+  const calendarData = getRealCalendarData(calendarWeekOffset);
 
   const timeSlots = [
     '09:00', '10:30', '11:00', '13:00', '14:00', '15:30'
@@ -1800,10 +1801,32 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
           <div className="flex justify-between items-center mb-6">
             <span className="font-bold text-slate-800 text-lg">{calendarData.monthTitle}</span>
             <div className="flex gap-2">
-              <button className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors">
-                <ChevronLeft size={16} />
+              <button
+                type="button"
+                onClick={() => {
+                  setCalendarWeekOffset(prev => Math.max(0, prev - 1));
+                  setSelectedDate(null);
+                  setSelectedTime(null);
+                }}
+                disabled={calendarWeekOffset === 0}
+                className={`w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors ${
+                  calendarWeekOffset === 0 ? 'opacity-40 cursor-not-allowed' : ''
+                }`}
+                title="שבוע קודם"
+              >
+                <ChevronRight size={16} />
               </button>
-              <button className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transform rotate-180 transition-colors">
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCalendarWeekOffset(prev => prev + 1);
+                  setSelectedDate(null);
+                  setSelectedTime(null);
+                }}
+                className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors"
+                title="שבוע הבא"
+              >
                 <ChevronLeft size={16} />
               </button>
             </div>
