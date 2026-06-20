@@ -1739,7 +1739,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
   const [selectedTime, setSelectedTime] = useState(null);
 
   const nextWorkWeekDates = getNextWorkWeekDates();
-  onst weekRangeTitle = `${nextWorkWeekDates[0].displayDate}–${nextWorkWeekDates[nextWorkWeekDates.length - 1].displayDate}`;
+  const weekRangeTitle = `${nextWorkWeekDates[0].displayDate}–${nextWorkWeekDates[nextWorkWeekDates.length - 1].displayDate}`;
 
   const timeSlots = [
     '09:00', '10:30', '11:00', '13:00', '14:00', '15:30'
