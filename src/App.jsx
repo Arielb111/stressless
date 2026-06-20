@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Home, FileText, MessageCircle, CalendarDays, PhoneCall, 
   Package, UserCheck, Briefcase, GraduationCap, Users, 
@@ -749,8 +750,8 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
       )}
 
       {/* Services Breakdown Modal */}
-      {isServicesBreakdownOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+      {isServicesBreakdownOpen && createPortal(
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
           {/* UX FIX: Applied overflow-hidden to ensure corners remain perfectly rounded */}
           <div className="bg-white w-full max-w-sm rounded-[32px] p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[85vh] flex flex-col overflow-hidden">
             
@@ -785,7 +786,8 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div>,
+                document.body
               )}
               
               {/* Section 2: Unused */}
