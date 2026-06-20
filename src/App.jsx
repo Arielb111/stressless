@@ -1962,7 +1962,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
       {/* 5. BOOKED APPOINTMENTS LIST */}
       {(filteredAppointments.length > 0 || !searchQuery) && (
         <div className="pt-8 px-1">
-          <h3 className="font-semibold text-slate-800 text-lg mb-4">התורים שנקבעו</h3>
+          <h3 className="font-semibold text-slate-800 text-lg mb-4">התורים הקרובים</h3>
           
           <div className="bg-white border border-slate-200 rounded-2xl p-2 shadow-sm flex flex-col divide-y divide-slate-100">
             {filteredAppointments.length > 0 ? filteredAppointments.map((appt) => (
@@ -1981,17 +1981,35 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   <div className="flex items-center gap-1 text-slate-500">
                     {(() => {
-                      const parts = appt.timeStr.trim().split(/\s+/);
+                      const source = String(appt.timeStr || '').trim();
+                      const parts = source.split(/\s+/);
 
-                      const time = parts.find(part => part.includes(':'));
-                      const day = parts.find(part => /^\d{1,2}$/.test(part));
-                      const month = parts.find(part => !part.includes(':') && !/^\d{1,2}$/.test(part));
+                      const time = appt.time || parts.find(part => part.includes(':')) || '';
+                      const day = appt.dateDay || parts.find(part => /^\d{1,2}$/.test(part)) || '';
+                      const month = appt.dateMonth || parts.find(part => !part.includes(':') && !/^\d{1,2}$/.test(part)) || '';
+
+                      const hasFullDate = day && month && time;
+
+                      if (!hasFullDate) {
+                        return (
+                          <span className="text-[11px] font-semibold whitespace-nowrap">
+                            {source}
+                          </span>
+                        );
+                      }
 
                       return (
-                        <span className="text-[11px] font-semibold inline-flex items-center gap-1 whitespace-nowrap" dir="ltr">
-                          <span dir="ltr">{day}</span>
-                          <span dir="rtl">{month}</span>
-                          <span dir="ltr">{time}</span>
+                        <span
+                          className="text-[11px] font-semibold whitespace-nowrap inline-grid items-center gap-1"
+                          style={{
+                            gridTemplateColumns: 'auto auto auto',
+                            direction: 'ltr',
+                            unicodeBidi: 'isolate'
+                          }}
+                        >
+                          <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{day}</span>
+                          <span dir="rtl" style={{ unicodeBidi: 'isolate' }}>{month}</span>
+                          <span dir="ltr" style={{ unicodeBidi: 'isolate' }}>{time}</span>
                         </span>
                       );
                     })()}
