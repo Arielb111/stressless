@@ -1938,12 +1938,17 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               ? provObj.name.split(' - ') 
               : [provObj?.name || 'פגישה חדשה', 'כללי'];
 
+            const [appointmentDay, appointmentMonth] = (calendarData.labels[selectedDate] || '').split(' ');
+
             const newAppt = {
               id: Date.now(),
               title: serviceType,
               name: providerName,
               type: 'פרונטלי',
-              timeStr: `${calendarData.labels[selectedDate]} ${selectedTime}`,
+              dateDay: appointmentDay,
+              dateMonth: appointmentMonth,
+              time: selectedTime,
+              timeStr: `${appointmentDay} ${appointmentMonth} ${selectedTime}`,
               icon: CalendarIcon
             };
             setAppointmentsList(prev => [...prev, newAppt]);
