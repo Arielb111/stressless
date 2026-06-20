@@ -1964,13 +1964,10 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                       const [day, month, time] = appt.timeStr.split(' ');
 
                       return (
-                        <span
-                          dir="ltr"
-                          className="text-[11px] font-semibold inline-flex flex-row items-center gap-1 whitespace-nowrap"
-                        >
-                          <span>{day}</span>
+                        <span className="text-[11px] font-semibold inline-flex flex-row-reverse items-center gap-1 whitespace-nowrap">
+                          <span dir="ltr">{time}</span>
                           <span dir="rtl">{month}</span>
-                          <span>{time}</span>
+                          <span dir="ltr">{day}</span>
                         </span>
                       );
                     })()}
