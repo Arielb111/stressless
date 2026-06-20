@@ -1661,37 +1661,6 @@ function ChatView({ searchQuery }) {
 // SCREEN 4: APPOINTMENT BOOKING (REDESIGNED)
 // ==========================================
 
-function getNextWorkWeekDates() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const currentDay = today.getDay(); 
-  // 0 = ראשון, 1 = שני, ... 6 = שבת
-
-  const daysUntilNextSunday = currentDay === 0 ? 7 : 7 - currentDay;
-
-  const nextSunday = new Date(today);
-  nextSunday.setDate(today.getDate() + daysUntilNextSunday);
-
-  const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'];
-
-  return dayNames.map((dayName, index) => {
-    const date = new Date(nextSunday);
-    date.setDate(nextSunday.getDate() + index);
-
-    const dayNumber = date.getDate();
-    const monthNumber = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    return {
-      id: `${year}-${String(monthNumber).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`,
-      dayName,
-      displayDate: `${dayNumber}.${monthNumber}`,
-      fullLabel: `יום ${dayName}, ${dayNumber}.${monthNumber}`,
-    };
-  });
-}
-
 function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPreselectedProvider, searchQuery, appointmentsList, setAppointmentsList }) {
   const providers = [
     { id: 'sw', name: 'תיאום טיפול - מרפאת רמת חן (מיכל)' },
@@ -1738,8 +1707,9 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
 
-  const nextWorkWeekDates = getNextWorkWeekDates();
-  const weekRangeTitle = `${nextWorkWeekDates[0].displayDate}–${nextWorkWeekDates[nextWorkWeekDates.length - 1].displayDate}`;
+  const weekDays = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
+  const blanks = Array(1).fill(null);
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
 
   const timeSlots = [
     '09:00', '10:30', '11:00', '13:00', '14:00', '15:30'
@@ -1781,32 +1751,51 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mx-1 animate-in fade-in slide-in-from-top-4 duration-300">
           
           <div className="flex justify-between items-center mb-6">
-            <div>
-              <span className="font-bold text-slate-800 text-lg">שבוע הבא</span>
-              <p className="text-xs text-slate-500 mt-1">{weekRangeTitle}</p>
+            <span className="font-bold text-slate-800 text-lg">יוני 2026</span>
+            <div className="flex gap-2">
+              <button className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors">
+                <ChevronLeft size={16} />
+              </button>
+              <button className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transform rotate-180 transition-colors">
+                <ChevronLeft size={16} />
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-5 gap-2 text-center" dir="rtl">
-            {nextWorkWeekDates.map((date) => {
-              const isSelected = selectedDate?.id === date.id;
+          <div className="grid grid-cols-7 gap-y-4 gap-x-1 text-center" dir="rtl">
+            {weekDays.map(day => (
+              <div key={day} className="text-xs font-bold text-slate-400 pb-2">{day}</div>
+            ))}
+            
+            {blanks.map((_, i) => (
+              <div key={`blank-${i}`} className="p-2"></div>
+            ))}
+            
+            {/* UX FIX: Highlight active/selectable dates with a soft purple background, restrict weekends */}
+            {days.map(day => {
+              const isSelected = selectedDate === day;
+              // LOGIC FIX: Disable Fridays (index 5) and Saturdays (index 6)
+              const dayOfWeek = day % 7; 
+              const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+              const isPast = day < 14; 
+              const isDisabled = isPast || isWeekend;
 
               return (
-                <button
-                  key={date.id}
-                  onClick={() => {
-                    setSelectedDate(date);
-                    setSelectedTime(null);
-                  }}
-                  className={`rounded-2xl p-3 border transition-all flex flex-col items-center justify-center min-h-[76px] ${
-                    isSelected
-                      ? 'bg-[#7b29e8] text-white border-[#7b29e8] shadow-md scale-[1.02]'
-                      : 'bg-[#f4effd]/60 text-[#7b29e8] border-[#f4effd] hover:bg-[#f4effd]'
-                  }`}
-                >
-                  <span className="text-[11px] font-bold leading-tight">יום {date.dayName}</span>
-                  <span className="text-sm font-bold mt-1">{date.displayDate}</span>
-                </button>
+                <div key={day} className="flex justify-center items-center">
+                  <button
+                    disabled={isDisabled}
+                    onClick={() => { setSelectedDate(day); setSelectedTime(null); }}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                      isSelected 
+                        ? 'bg-[#7b29e8] text-white shadow-md scale-105' 
+                        : isDisabled 
+                          ? 'text-slate-300 cursor-not-allowed' 
+                          : 'bg-[#f4effd]/60 text-[#7b29e8] hover:bg-[#f4effd] hover:font-bold'
+                    }`}
+                  >
+                    {day}
+                  </button>
+                </div>
               );
             })}
           </div>
@@ -1858,7 +1847,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               title: serviceType,
               name: providerName,
               type: 'פרונטלי',
-              timeStr: `${selectedDate.fullLabel} ${selectedTime}`,
+              timeStr: `${selectedDate} ביוני ${selectedTime}`,
               icon: CalendarIcon
             };
             setAppointmentsList(prev => [...prev, newAppt]);
