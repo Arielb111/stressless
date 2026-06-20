@@ -1960,7 +1960,9 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                 
                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                   <div className="flex items-center gap-1 text-slate-500">
-                    <span className="text-[11px] font-semibold" dir="ltr">{appt.timeStr}</span>
+                    <span dir="ltr" className="text-[11px] font-semibold inline-block text-left whitespace-nowrap">
+                      {appt.timeStr}
+                    </span>
                     <Clock size={14} className="text-slate-400" />
                   </div>
                   <button 
