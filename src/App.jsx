@@ -1661,6 +1661,54 @@ function ChatView({ searchQuery }) {
 // SCREEN 4: APPOINTMENT BOOKING (REDESIGNED)
 // ==========================================
 
+function getRealCalendarData() {
+  const monthNames = [
+    'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
+    'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
+  ];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const currentDay = today.getDay(); // 0 ראשון, 1 שני ... 6 שבת
+  const daysUntilNextSunday = currentDay === 0 ? 7 : 7 - currentDay;
+
+  const nextSunday = new Date(today);
+  nextSunday.setDate(today.getDate() + daysUntilNextSunday);
+
+  const year = nextSunday.getFullYear();
+  const month = nextSunday.getMonth();
+
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const allowedDateIds = [];
+  const labels = {};
+
+  for (let i = 0; i < 5; i++) {
+    const date = new Date(nextSunday);
+    date.setDate(nextSunday.getDate() + i);
+
+    const id = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    allowedDateIds.push(id);
+    labels[id] = `${date.getDate()} ${monthNames[date.getMonth()]}`;
+  }
+
+  return {
+    monthTitle: `${monthNames[month]} ${year}`,
+    blanks: Array(firstDayOfMonth).fill(null),
+    days: Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const id = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      return { day, id };
+    }),
+    allowedDateIds,
+    labels
+  };
+}
+
 function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPreselectedProvider, searchQuery, appointmentsList, setAppointmentsList }) {
   const providers = [
     { id: 'sw', name: 'תיאום טיפול - מרפאת רמת חן (מיכל)' },
@@ -1708,8 +1756,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
   const [selectedTime, setSelectedTime] = useState(null);
 
   const weekDays = ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'];
-  const blanks = Array(1).fill(null);
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  const calendarData = getRealCalendarData();
 
   const timeSlots = [
     '09:00', '10:30', '11:00', '13:00', '14:00', '15:30'
@@ -1751,7 +1798,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 mx-1 animate-in fade-in slide-in-from-top-4 duration-300">
           
           <div className="flex justify-between items-center mb-6">
-            <span className="font-bold text-slate-800 text-lg">יוני 2026</span>
+            <span className="font-bold text-slate-800 text-lg">{calendarData.monthTitle}</span>
             <div className="flex gap-2">
               <button className="w-8 h-8 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-100 transition-colors">
                 <ChevronLeft size={16} />
@@ -1767,24 +1814,20 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               <div key={day} className="text-xs font-bold text-slate-400 pb-2">{day}</div>
             ))}
             
-            {blanks.map((_, i) => (
+            {calendarData.blanks.map((_, i) => (
               <div key={`blank-${i}`} className="p-2"></div>
             ))}
             
             {/* UX FIX: Highlight active/selectable dates with a soft purple background, restrict weekends */}
-            {days.map(day => {
-              const isSelected = selectedDate === day;
-              // LOGIC FIX: Disable Fridays (index 5) and Saturdays (index 6)
-              const dayOfWeek = day % 7; 
-              const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
-              const isPast = day < 14; 
-              const isDisabled = isPast || isWeekend;
+            {calendarData.days.map(dateObj => {
+              const isSelected = selectedDate === dateObj.id;
+              const isDisabled = !calendarData.allowedDateIds.includes(dateObj.id);
 
               return (
-                <div key={day} className="flex justify-center items-center">
+                <div key={dateObj.id} className="flex justify-center items-center">
                   <button
                     disabled={isDisabled}
-                    onClick={() => { setSelectedDate(day); setSelectedTime(null); }}
+                    onClick={() => { setSelectedDate(dateObj.id); setSelectedTime(null); }}
                     className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
                       isSelected 
                         ? 'bg-[#7b29e8] text-white shadow-md scale-105' 
@@ -1793,7 +1836,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
                           : 'bg-[#f4effd]/60 text-[#7b29e8] hover:bg-[#f4effd] hover:font-bold'
                     }`}
                   >
-                    {day}
+                    {dateObj.day}
                   </button>
                 </div>
               );
@@ -1847,7 +1890,7 @@ function BookingView({ isMobileView, setActiveTab, preselectedProvider, setPrese
               title: serviceType,
               name: providerName,
               type: 'פרונטלי',
-              timeStr: `${selectedDate} ביוני ${selectedTime}`,
+              timeStr: `${calendarData.labels[selectedDate]} ${selectedTime}`,
               icon: CalendarIcon
             };
             setAppointmentsList(prev => [...prev, newAppt]);
