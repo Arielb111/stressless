@@ -983,7 +983,7 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
                     <div className="w-2.5 h-2.5 bg-slate-300 rounded-full"></div>
                   </div>
                   <div className="flex-1 flex justify-between items-center">
-                    <span className="text-sm font-bold text-slate-800">דוח פסיכיאטרי</span>
+                    <span className="text-sm font-medium text-slate-500">דוח פסיכיאטרי</span>
                     <span className="text-xs font-semibold text-slate-500">בבדיקה</span>
                   </div>
                 </div>
@@ -996,7 +996,7 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
                   {/* CRITICAL FIX: RTL visual layout fix for missing document row */}
                   <div className="flex-1 flex justify-between items-center">
                     {/* Far Right in RTL: Title */}
-                    <span className="text-sm font-medium text-slate-500">אישור הכנסות</span>
+                    <span className="text-sm font-bold text-slate-800">אישור הכנסות</span>
                     
                     {/* Left side container */}
                     <div className="flex items-center gap-2">
