@@ -1344,7 +1344,7 @@ function ChatView({ searchQuery }) {
   const [showEmergency, setShowEmergency] = useState(false);
   const endOfChatRef = useRef(null);
 
-  const distressWords = ['מיואש', 'קשה לי', 'לא יכול', 'דיכאון', 'אובדני', 'רע לי', 'מפחד'];
+  const distressWords = ['מוות', 'למות', 'נמאס לי', 'מיואש', 'קשה לי', 'לא יכול', 'דיכאון', 'אובדני', 'רע לי', 'מפחד'];
 
   const handleInputChange = (e, isNewTicket = false) => {
     const text = e.target.value;
