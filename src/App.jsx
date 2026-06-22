@@ -94,9 +94,6 @@ function LoginScreen({ onLogin }) {
 
               <div className="flex flex-col">
                 <span className="font-bold text-sm text-slate-800">התחברות ביומטרית</span>
-                <span className="text-xs text-slate-500 mt-0.5">
-                  זיהוי פנים / טביעת אצבע
-                </span>
               </div>
             </button>
 
@@ -111,9 +108,6 @@ function LoginScreen({ onLogin }) {
 
               <div className="flex flex-col">
                 <span className="font-bold text-sm text-slate-800">קוד חד־פעמי לנייד</span>
-                <span className="text-xs text-slate-500 mt-0.5">
-                  SMS / OTP למספר המעודכן במערכת
-                </span>
               </div>
             </button>
           </div>
