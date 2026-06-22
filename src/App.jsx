@@ -1508,6 +1508,8 @@ function ChatView({ searchQuery }) {
   };
 
   const handleNewTicketAiAssist = () => {
+    if (!newTicketTopic) return;
+
     setNewTicketText(
       'שלום, אני רוצה לפתוח פנייה בנושא הזה. אשמח לקבל הסבר ברור לגבי המשך התהליך ומה עליי לעשות בשלב הבא.'
     );
@@ -1600,10 +1602,19 @@ function ChatView({ searchQuery }) {
                   <div className="flex items-center gap-1 pb-1 pl-1">
                     <button
                       type="button"
+                      disabled={!newTicketTopic}
                       onClick={handleNewTicketAiAssist}
-                      title="עזרה של AI בניסוח הפנייה"
+                      title={
+                        newTicketTopic
+                          ? 'עזרה של AI בניסוח הפנייה'
+                          : 'בחרי נושא לפנייה לפני שימוש בעזרת AI'
+                      }
                       aria-label="עזרה של AI בניסוח הפנייה"
-                      className="p-2 text-[#7b29e8] bg-[#f4effd] hover:bg-[#eaddfc] transition-colors rounded-full shrink-0 active:scale-95"
+                      className={`p-2 rounded-full shrink-0 transition-colors active:scale-95 ${
+                        newTicketTopic
+                          ? 'text-[#7b29e8] bg-[#f4effd] hover:bg-[#eaddfc]'
+                          : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                      }`}
                     >
                       <Sparkles size={18} />
                     </button>
