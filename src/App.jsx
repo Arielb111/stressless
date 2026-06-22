@@ -497,6 +497,7 @@ function DesktopSidebar({ activeTab, setActiveTab }) {
 
 function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, searchQuery, appointmentsList, setAppointmentsList, setHighlightDocs, setUploadTrigger }) {
   const [isServicesBreakdownOpen, setIsServicesBreakdownOpen] = useState(false);
+  const [showAllServices, setShowAllServices] = useState(false);
   
   const [cancelModal, setCancelModal] = useState({ isOpen: false, apptId: null });
   const [toastMessage, setToastMessage] = useState("");
@@ -531,6 +532,12 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
     s.name.toLowerCase().includes(lowerQuery) || 
     s.provider.toLowerCase().includes(lowerQuery)
   );
+
+  const displayedMyServices = searchQuery
+  ? filteredMyServices
+  : showAllServices
+    ? myAllServices
+    : myAllServices.slice(0, 2);
 
   return (
     <div className="flex flex-col space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500 relative pb-8">
@@ -699,19 +706,21 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
       )}
 
       {/* 5. MY SERVICES */}
-      {(filteredMyServices.length > 0 || !searchQuery) && (
+      {(displayedMyServices.length > 0 || !searchQuery) && (
         <div>
           <div className="mb-4 px-1">
             <h3 className="font-semibold text-slate-800 text-lg leading-tight">הסל שלי</h3>
             <p className="text-sm text-slate-500 mt-0.5">לפי תוכנית סל שיקום מאושרת</p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredMyServices.map((service, idx) => (
+            {displayedMyServices.map((service, idx) => (
               <div key={idx} className="bg-white shadow-sm border border-slate-100 rounded-2xl p-4 flex flex-col h-full group hover:border-[#eaddfc] transition-colors cursor-default">
                 <div className="flex flex-row justify-between items-start w-full mb-3">
                   <div className="w-12 h-12 rounded-full bg-[#f4effd] text-[#7b29e8] flex items-center justify-center shrink-0">
                     <service.icon size={22} strokeWidth={1.5} />
                   </div>
+
                   <div className={`px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1.5 shrink-0 border ${
                     service.status === 'active' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
                     service.status === 'pending' ? 'bg-slate-50 text-slate-600 border-slate-200' :
@@ -723,12 +732,17 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
                     {service.status === 'active' ? 'פעיל' : service.status === 'pending' ? 'ממתין להחלטת וועדה' : 'טרם נוצל'}
                   </div>
                 </div>
+
                 <div className="flex flex-col mb-2">
                   <h4 className="font-bold text-slate-800 text-base leading-tight">{service.name}</h4>
                   <p className="text-[13px] font-medium text-slate-600 mt-1.5">{service.provider}</p>
                 </div>
+
                 <div className="mt-auto flex flex-col pt-3">
-                  <p className="text-[11px] text-slate-400">{service.status === 'unused' ? 'ממתין להפעלה' : service.valid}</p>
+                  <p className="text-[11px] text-slate-400">
+                    {service.status === 'unused' ? 'ממתין להפעלה' : service.valid}
+                  </p>
+
                   {service.status === 'active' && (
                     <button 
                       onClick={() => {
@@ -742,6 +756,7 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
                       קביעת מפגש &larr;
                     </button>
                   )}
+
                   {service.status === 'unused' && (
                     <button 
                       onClick={() => {
@@ -759,6 +774,21 @@ function DashboardView({ isMobileView, setActiveTab, setPreselectedProvider, sea
               </div>
             ))}
           </div>
+
+          {!searchQuery && myAllServices.length > 2 && (
+            <button
+              type="button"
+              onClick={() => setShowAllServices(prev => !prev)}
+              aria-expanded={showAllServices}
+              className="mt-4 mx-auto flex items-center justify-center gap-2 text-[#7b29e8] text-sm font-bold hover:text-[#6221ba] transition-colors px-4 py-2 rounded-full hover:bg-[#f4effd]"
+            >
+              {showAllServices ? 'הצג פחות שירותים' : 'לצפייה בשירותים נוספים...'}
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${showAllServices ? 'rotate-180' : ''}`}
+              />
+            </button>
+          )}
         </div>
       )}
 
