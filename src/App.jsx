@@ -7,7 +7,7 @@ import {
   Send, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight,
   Clock, Calendar as CalendarIcon, Info, Image as ImageIcon,
   Monitor, Smartphone, Heart, Plus, FileUp, Bell, ChevronDown,
-  Search, X, History, Video, MapPin, Folder, Cloud, Trash2, ScanFace
+  Search, X, History, Video, MapPin, Folder, Cloud, Trash2, ScanFace, Sparkles
 } from 'lucide-react';
 
 // --- Trauma-Informed Design System Colors ---
@@ -1530,6 +1530,12 @@ function ChatView({ searchQuery }) {
     setShowEmergency(false);
   };
 
+  const handleAiAssist = () => {
+    setInputText(
+      'שלום, אני רוצה לקבל עזרה בנושא הזה. אשמח להסבר ברור לגבי המשך התהליך ומה עליי לעשות בשלב הבא.'
+    );
+  };
+
   useEffect(() => {
     if (selectedTicket && endOfChatRef.current) {
       endOfChatRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -1713,15 +1719,27 @@ function ChatView({ searchQuery }) {
               onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
             />
           </div>
-          <button 
-            onClick={handleSend}
-            disabled={!inputText.trim()}
-            className={`w-12 h-12 flex items-center justify-center rounded-full transition-colors shrink-0 ${
-              inputText.trim() ? 'bg-[#7b29e8] text-white shadow-md hover:bg-[#6221ba]' : 'bg-slate-200 text-slate-400'
-            }`}
-          >
-            <Send size={18} className="transform -rotate-90 ml-0.5" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleAiAssist}
+              title="עזרה של AI בניסוח הפנייה"
+              aria-label="עזרה של AI בניסוח הפנייה"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-[#f4effd] text-[#7b29e8] hover:bg-[#eaddfc] transition-colors active:scale-[0.98]"
+            >
+              <Sparkles size={18} />
+            </button>
+
+            <button 
+              onClick={handleSend}
+              disabled={!inputText.trim()}
+              className={`w-12 h-12 flex items-center justify-center rounded-full transition-colors shrink-0 ${
+                inputText.trim() ? 'bg-[#7b29e8] text-white shadow-md hover:bg-[#6221ba]' : 'bg-slate-200 text-slate-400'
+              }`}
+            >
+              <Send size={18} className="transform -rotate-90 ml-0.5" />
+            </button>
+          </div>
         </div>
 
         {/* Emergency Modal */}
