@@ -1507,6 +1507,12 @@ function ChatView({ searchQuery }) {
     setShowEmergency(false);
   };
 
+  const handleNewTicketAiAssist = () => {
+    setNewTicketText(
+      'שלום, אני רוצה לפתוח פנייה בנושא הזה. אשמח לקבל הסבר ברור לגבי המשך התהליך ומה עליי לעשות בשלב הבא.'
+    );
+  };
+
   const handleSend = () => {
     if(!inputText.trim()) return;
 
@@ -1592,9 +1598,20 @@ function ChatView({ searchQuery }) {
                     dir="rtl"
                   />
                   <div className="flex items-center gap-1 pb-1 pl-1">
+                    <button
+                      type="button"
+                      onClick={handleNewTicketAiAssist}
+                      title="עזרה של AI בניסוח הפנייה"
+                      aria-label="עזרה של AI בניסוח הפנייה"
+                      className="p-2 text-[#7b29e8] bg-[#f4effd] hover:bg-[#eaddfc] transition-colors rounded-full shrink-0 active:scale-95"
+                    >
+                      <Sparkles size={18} />
+                    </button>
+
                     <button className="p-2 text-slate-400 hover:text-[#7b29e8] transition-colors rounded-full hover:bg-slate-200 shrink-0">
                       <Mic size={18} />
                     </button>
+
                     <button 
                       disabled={!newTicketText.trim() || !newTicketTopic}
                       onClick={handleCreateNewTicket}
