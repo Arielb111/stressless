@@ -1351,6 +1351,44 @@ function DocumentsView({ searchQuery, highlightDocs, setHighlightDocs, uploadTri
 // SCREEN 3: COMMUNICATION & TICKETS 
 // ==========================================
 
+function EmergencySupportModal({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white max-w-md w-full rounded-[24px] p-5 shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
+        <div className="flex items-start gap-4">
+          <div className="w-11 h-11 rounded-full bg-violet-50 flex items-center justify-center shrink-0">
+            <Heart className="text-violet-600" size={21} />
+          </div>
+
+          <div className="flex-1">
+            <h3 className="font-bold text-slate-800">אנחנו כאן בשבילך.</h3>
+            <p className="text-sm text-slate-600 mt-1 mb-4 leading-relaxed">
+              זיהינו שאתה עובר רגע לא פשוט. אם אתה זקוק לאוזן קשבת מיידית, אל תישא בזה לבד.
+            </p>
+
+            <div className="flex gap-2">
+              <a
+                href="tel:1201"
+                className="flex-1 bg-violet-600 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-violet-700 transition-colors"
+              >
+                <PhoneCall size={16} />
+                חיוג לער״ן (1201)
+              </a>
+
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-100 transition-colors"
+              >
+                סגור
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChatView({ searchQuery }) {
   // UX FIX: State moved into component to handle active pushing of messages
   const [activeTickets, setActiveTickets] = useState([
@@ -1403,6 +1441,9 @@ function ChatView({ searchQuery }) {
     
     const isDistressed = distressWords.some(word => text.includes(word));
     if (isDistressed && !showEmergency) {
+      if (typeof document !== 'undefined' && document.activeElement) {
+        document.activeElement.blur();
+      }
       setShowEmergency(true);
     }
   };
@@ -1567,28 +1608,7 @@ function ChatView({ searchQuery }) {
         </div>
 
         {showEmergency && (
-          <div className="fixed bottom-24 left-4 right-4 bg-white rounded-[24px] p-5 shadow-2xl border border-slate-100 animate-in slide-in-from-bottom-4 zoom-in-95 z-50">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-fuchsia-50 flex items-center justify-center shrink-0">
-                <Heart className="text-fuchsia-600" size={20} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">אנחנו כאן בשבילך.</h3>
-                <p className="text-sm text-slate-600 mt-1 mb-4">זיהינו שאתה עובר רגע לא פשוט. אם אתה זקוק לאוזן קשבת מיידית, אל תישא בזה לבד.</p>
-                <div className="flex gap-2">
-                  <a href="tel:1201" className="flex-1 bg-fuchsia-600 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-fuchsia-700 transition-colors">
-                    <PhoneCall size={16} /> חיוג לער״ן (1201)
-                  </a>
-                  <button 
-                    onClick={() => setShowEmergency(false)}
-                    className="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-100 transition-colors"
-                  >
-                    סגור
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EmergencySupportModal onClose={() => setShowEmergency(false)} />
         )}
       </div>
     );
@@ -1676,28 +1696,7 @@ function ChatView({ searchQuery }) {
 
         {/* Emergency Modal */}
         {showEmergency && (
-          <div className="absolute bottom-full left-4 right-4 mb-4 bg-white rounded-[24px] p-5 shadow-2xl border border-slate-100 animate-in slide-in-from-bottom-4 zoom-in-95 z-50">
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-fuchsia-50 flex items-center justify-center shrink-0">
-                <Heart className="text-fuchsia-600" size={20} />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">אנחנו כאן בשבילך.</h3>
-                <p className="text-sm text-slate-600 mt-1 mb-4">זיהינו שאתה עובר רגע לא פשוט. אם אתה זקוק לאוזן קשבת מיידית, אל תישא בזה לבד.</p>
-                <div className="flex gap-2">
-                  <a href="tel:1201" className="flex-1 bg-fuchsia-600 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-fuchsia-700 transition-colors">
-                    <PhoneCall size={16} /> חיוג לער״ן (1201)
-                  </a>
-                  <button 
-                    onClick={() => setShowEmergency(false)}
-                    className="px-4 py-2 bg-slate-50 text-slate-500 rounded-xl text-sm font-medium hover:bg-slate-100 transition-colors"
-                  >
-                    סגור
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EmergencySupportModal onClose={() => setShowEmergency(false)} />
         )}
       </div>
     </div>
