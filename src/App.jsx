@@ -7,7 +7,7 @@ import {
   Send, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight,
   Clock, Calendar as CalendarIcon, Info, Image as ImageIcon,
   Monitor, Smartphone, Heart, Plus, FileUp, Bell, ChevronDown,
-  Search, X, History, Video, MapPin, Folder, Cloud, Trash2
+  Search, X, History, Video, MapPin, Folder, Cloud, Trash2, ScanFace
 } from 'lucide-react';
 
 // --- Trauma-Informed Design System Colors ---
@@ -38,14 +38,21 @@ function LoginScreen({ onLogin }) {
   return (
     <div dir="rtl" className="min-h-screen flex items-center justify-center bg-slate-50 p-4 font-sans text-slate-800">
       <div className="bg-white w-full max-w-sm rounded-[32px] p-8 shadow-xl flex flex-col items-center animate-in zoom-in-95 duration-500">
+        
         <div className="w-full flex justify-center items-center mb-6 mt-2 overflow-visible">
           <LogoSVG className="h-14 w-auto max-w-[220px] shrink-0" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-800 mb-8">כניסה למערכת</h1>
 
-        <div className="w-full mb-6 relative">
+        <h1 className="text-2xl font-bold text-slate-800 mb-2">כניסה למערכת</h1>
+        <p className="text-sm text-slate-500 text-center mb-6">
+          התחברות מאובטחת לאזור האישי
+        </p>
+
+        {/* Primary login option - ID number */}
+        <div className="w-full mb-4 relative">
           <input
             type="text"
+            inputMode="numeric"
             maxLength="9"
             placeholder="מספר תעודת זהות"
             value={idNumber}
@@ -66,6 +73,52 @@ function LoginScreen({ onLogin }) {
         >
           התחבר
         </button>
+
+        {/* Secondary login options */}
+        <div className="w-full mt-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px bg-slate-100 flex-1" />
+            <span className="text-xs text-slate-400">אפשרויות התחברות נוספות</span>
+            <div className="h-px bg-slate-100 flex-1" />
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            <button
+              type="button"
+              onClick={() => onLogin()}
+              className="w-full p-3.5 rounded-2xl bg-white border border-slate-200 text-right flex items-center gap-3 transition-all hover:bg-[#f4effd] hover:border-[#7b29e8]/20 active:scale-[0.98]"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#f4effd] text-[#7b29e8] flex items-center justify-center shrink-0">
+                <ScanFace size={21} />
+              </div>
+
+              <div className="flex flex-col">
+                <span className="font-bold text-sm text-slate-800">התחברות ביומטרית</span>
+                <span className="text-xs text-slate-500 mt-0.5">
+                  זיהוי פנים / טביעת אצבע
+                </span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onLogin()}
+              className="w-full p-3.5 rounded-2xl bg-white border border-slate-200 text-right flex items-center gap-3 transition-all hover:bg-[#f4effd] hover:border-[#7b29e8]/20 active:scale-[0.98]"
+            >
+              <div className="w-10 h-10 rounded-full bg-[#f4effd] text-[#7b29e8] flex items-center justify-center shrink-0">
+                <Smartphone size={21} />
+              </div>
+
+              <div className="flex flex-col">
+                <span className="font-bold text-sm text-slate-800">קוד חד־פעמי לנייד</span>
+                <span className="text-xs text-slate-500 mt-0.5">
+                  SMS / OTP למספר המעודכן במערכת
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   );
