@@ -1,16 +1,67 @@
-# React + Vite
+# Stressless
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Stressless is a React-based prototype designed to help PTSD users manage their rehabilitation basket services in a clearer, calmer, and more organized way.
 
-Currently, two official plugins are available:
+The app focuses on reducing bureaucratic overload by centralizing appointments, documents, rehabilitation services, personal rights, and communication with support providers in one accessible interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project Purpose
 
-## React Compiler
+The goal of Stressless is to create a trauma-informed digital experience for users who need to manage rehabilitation-related information without feeling overwhelmed.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The prototype was designed as part of a User Interface Design course project and follows principles of usability, accessibility, cognitive load reduction, and clear visual hierarchy.
 
-## Expanding the ESLint configuration
+## Main Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Personal dashboard for rehabilitation basket services
+* Appointment scheduling and appointment tracking
+* Document management screen
+* Support requests and communication flow
+* Information area for eligible rehabilitation services
+* Calm RTL Hebrew interface
+* Mobile-first responsive design
+
+## Technologies Used
+
+* React
+* Vite
+* Tailwind CSS
+* Lucide React
+
+## How to Run the Project
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Build the project:
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```txt
+src/
+public/
+package.json
+vite.config.js
+tailwind.config.js
+postcss.config.js
+```
+
+## Notes
+
+The `node_modules` folder is not included in GitHub because it is generated automatically after running `npm install`.
+
+## Author
+
+Stressless was created as part of an academic UX/UI course project.
